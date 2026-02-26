@@ -2,30 +2,24 @@ package handler
 
 import (
 	"net/http"
-	"sync"
 
 	altcha "github.com/altcha-org/altcha-lib-go"
 	"github.com/labstack/echo/v4"
 
 	"altcha/pkg/config"
+	"altcha/pkg/store"
 )
 
-func Verify(cfg *config.Config) echo.HandlerFunc {
-	var (
-		mu          sync.Mutex
-		recordCache []string
-	)
-
+func Verify(cfg *config.Config, s store.Store) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		payload := c.QueryParam("altcha")
 
-		mu.Lock()
-		defer mu.Unlock()
-
-		for _, r := range recordCache {
-			if r == payload {
-				return c.NoContent(http.StatusExpectationFailed)
-			}
+		exists, err := s.Exists(payload)
+		if err != nil {
+			return c.NoContent(http.StatusInternalServerError)
+		}
+		if exists {
+			return c.NoContent(http.StatusExpectationFailed)
 		}
 
 		ok, err := altcha.VerifySolution(payload, cfg.Secret, true)
@@ -33,10 +27,7 @@ func Verify(cfg *config.Config) echo.HandlerFunc {
 			return c.NoContent(http.StatusExpectationFailed)
 		}
 
-		recordCache = append(recordCache, payload)
-		if len(recordCache) > cfg.MaxRecords {
-			recordCache = recordCache[1:]
-		}
+		_ = s.Add(payload)
 
 		if ok {
 			return c.NoContent(http.StatusAccepted)

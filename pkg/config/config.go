@@ -16,6 +16,9 @@ type Config struct {
 	CorsOrigin    []string
 	Demo          bool
 	LogLevel      string
+	Store         string
+	SQLitePath    string
+	RedisURL      string
 }
 
 func (c *Config) IsDebug() bool {
@@ -32,6 +35,9 @@ func Load() *Config {
 		CorsOrigin:    envList("CORS_ORIGIN", nil),
 		Demo:          envBool("DEMO", false),
 		LogLevel:      envStr("LOG_LEVEL", "info"),
+		Store:         envStr("STORE", "memory"),
+		SQLitePath:    envStr("SQLITE_PATH", "data/altcha.db"),
+		RedisURL:      envStr("REDIS_URL", "redis://localhost:6379"),
 	}
 
 	if cfg.Secret == "$ecret.key" {

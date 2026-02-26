@@ -9,9 +9,10 @@ import (
 	"altcha/pkg/config"
 	"altcha/pkg/handler"
 	"altcha/pkg/middleware"
+	"altcha/pkg/store"
 )
 
-func NewAPIServer(cfg *config.Config) *echo.Echo {
+func NewAPIServer(cfg *config.Config, s store.Store) *echo.Echo {
 	e := echo.New()
 	e.HideBanner = true
 
@@ -32,7 +33,7 @@ func NewAPIServer(cfg *config.Config) *echo.Echo {
 	})
 	e.GET("/health", handler.Health())
 	e.GET("/challenge", handler.Challenge(cfg))
-	e.GET("/verify", handler.Verify(cfg))
+	e.GET("/verify", handler.Verify(cfg, s))
 
 	return e
 }

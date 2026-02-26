@@ -10,6 +10,7 @@ import (
 
 	"altcha/pkg/config"
 	"altcha/pkg/server"
+	"altcha/pkg/store"
 )
 
 func main() {
@@ -17,7 +18,16 @@ func main() {
 
 	cfg := config.Load()
 
-	apiServer := server.NewAPIServer(cfg)
+	s, err := initStore(cfg)
+	if err != nil {
+		fmt.Printf("[ALTCHA]: Failed to initialize store (%s): %v\n", cfg.Store, err)
+		os.Exit(1)
+	}
+	defer s.Close()
+
+	fmt.Printf("[ALTCHA]: Using %s store\n", cfg.Store)
+
+	apiServer := server.NewAPIServer(cfg, s)
 	go func() {
 		addr := fmt.Sprintf(":%d", cfg.Port)
 		fmt.Printf("[ALTCHA]: Captcha Server is running at http://localhost:%d\n", cfg.Port)
@@ -41,4 +51,15 @@ func main() {
 	<-quit
 
 	fmt.Println("[ALTCHA]: Shutting down...")
+}
+
+func initStore(cfg *config.Config) (store.Store, error) {
+	switch cfg.Store {
+	case "sqlite":
+		return store.NewSQLiteStore(cfg.SQLitePath, cfg.MaxRecords)
+	case "redis":
+		return store.NewRedisStore(cfg.RedisURL, cfg.ExpireMinutes)
+	default:
+		return store.NewMemoryStore(cfg.MaxRecords), nil
+	}
 }
