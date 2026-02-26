@@ -1,4 +1,4 @@
-# AI coding agent instructions for `altcha-docker`
+# AI coding agent instructions for `altcha`
 
 ## Overview
 
@@ -38,6 +38,11 @@
 - `MAXNUMBER`: max number for PoW difficulty (default 1000000).
 - `MAXRECORDS`: in-memory single-use token cache size (default 1000).
 - `CORS_ORIGIN`: comma-separated allowed origins; defaults to `*` if unset.
+- `RATE_LIMIT`: requests per second per IP (0 or unset = unlimited).
+- `STORE`: token store backend: `memory` (default), `sqlite`, `redis`.
+- `SQLITE_PATH`: SQLite file path (default `data/altcha.db`, used when STORE=sqlite).
+- `REDIS_URL`: Redis connection URL (default `redis://localhost:6379`, used when STORE=redis).
+- `LOG_LEVEL`: `info` (API logs only, default) or `debug` (API + demo logs).
 - `DEMO`: when `true`, serve demo on 8080 with CSP middleware.
 - `.env` is loaded by `godotenv` at runtime; Dockerfile also copies `.env` into image.
 

@@ -5,6 +5,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	echomw "github.com/labstack/echo/v4/middleware"
+	"golang.org/x/time/rate"
 
 	"altcha/pkg/config"
 	"altcha/pkg/handler"
@@ -19,6 +20,12 @@ func NewAPIServer(cfg *config.Config, s store.Store) *echo.Echo {
 	e.Use(echomw.LoggerWithConfig(echomw.LoggerConfig{
 		Format: "[API] ${time_rfc3339} ${remote_ip} ${method} ${uri} ${status} ${latency_human}\n",
 	}))
+
+	if cfg.RateLimit > 0 {
+		e.Use(echomw.RateLimiter(echomw.NewRateLimiterMemoryStore(
+			rate.Limit(cfg.RateLimit),
+		)))
+	}
 
 	if len(cfg.CorsOrigin) > 0 {
 		e.Use(echomw.CORSWithConfig(echomw.CORSConfig{

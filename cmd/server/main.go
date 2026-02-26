@@ -29,7 +29,7 @@ func main() {
 
 	apiServer := server.NewAPIServer(cfg, s)
 	go func() {
-		addr := fmt.Sprintf(":%d", cfg.Port)
+		addr := fmt.Sprintf("0.0.0.0:%d", cfg.Port)
 		fmt.Printf("[ALTCHA]: Captcha Server is running at http://localhost:%d\n", cfg.Port)
 		if err := apiServer.Start(addr); err != nil {
 			fmt.Printf("[ALTCHA]: API server stopped: %v\n", err)
@@ -40,7 +40,7 @@ func main() {
 		demoServer := server.NewDemoServer(cfg)
 		go func() {
 			fmt.Println("[ALTCHA]: Captcha Test Server is running at http://localhost:8080")
-			if err := demoServer.Start(":8080"); err != nil {
+			if err := demoServer.Start("0.0.0.0:8080"); err != nil {
 				fmt.Printf("[ALTCHA]: Demo server stopped: %v\n", err)
 			}
 		}()

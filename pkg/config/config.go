@@ -16,6 +16,7 @@ type Config struct {
 	CorsOrigin    []string
 	Demo          bool
 	LogLevel      string
+	RateLimit     float64
 	Store         string
 	SQLitePath    string
 	RedisURL      string
@@ -35,6 +36,7 @@ func Load() *Config {
 		CorsOrigin:    envList("CORS_ORIGIN", nil),
 		Demo:          envBool("DEMO", false),
 		LogLevel:      envStr("LOG_LEVEL", "info"),
+		RateLimit:     envFloat("RATE_LIMIT", 0),
 		Store:         envStr("STORE", "memory"),
 		SQLitePath:    envStr("SQLITE_PATH", "data/altcha.db"),
 		RedisURL:      envStr("REDIS_URL", "redis://localhost:6379"),
@@ -58,6 +60,15 @@ func envInt(key string, fallback int) int {
 	if v := os.Getenv(key); v != "" {
 		if n, err := strconv.Atoi(v); err == nil {
 			return n
+		}
+	}
+	return fallback
+}
+
+func envFloat(key string, fallback float64) float64 {
+	if v := os.Getenv(key); v != "" {
+		if f, err := strconv.ParseFloat(v, 64); err == nil {
+			return f
 		}
 	}
 	return fallback
