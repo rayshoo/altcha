@@ -5,7 +5,7 @@ metadata:
   labels:
     app: altcha
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: altcha
@@ -20,6 +20,9 @@ spec:
         ports:
         - name: http
           containerPort: 3000
+          protocol: TCP
+        - name: demo
+          containerPort: 8080
           protocol: TCP
         envFrom:
         - secretRef:

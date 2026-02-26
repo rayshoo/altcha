@@ -76,29 +76,20 @@ VPC Peering이나 Transit Gateway를 통해 공유 ALTCHA 서비스에 접근합
  └─ Internal ALB ←── VPC Peering ←── [dev/stg/prd VPC의 UI 백엔드]
 ```
 
-## Ingress 분리 예시
+## TLS 필수 (모바일 브라우저)
 
-```yaml
-# 퍼블릭 Ingress — 브라우저에서 챌린지 발급용
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: altcha-public
-  annotations:
-    nginx.ingress.kubernetes.io/cors-enable: "true"
-spec:
-  rules:
-  - host: captcha.example.com
-    http:
-      paths:
-      - path: /challenge
-        pathType: Exact
-        backend:
-          service:
-            name: altcha
-            port:
-              number: 3000
-```
+ALTCHA 위젯은 Web Worker를 사용하여 브라우저에서 PoW를 풀이합니다. 모바일 브라우저(Chrome, Safari)는 **비보안 컨텍스트(HTTP)에서 blob URL Worker 생성을 차단**하므로, 반드시 HTTPS(TLS)를 통해 서비스해야 합니다.
+
+- `localhost`는 브라우저가 secure context로 취급하여 HTTP에서도 동작
+- `http://<IP>` 또는 `http://<도메인>`은 insecure context로 Worker가 차단됨
+- Ingress에 TLS를 설정하면 HTTPS로 접근하므로 문제 없음
+
+## Ingress 분리
+
+API 서버와 데모 서버의 Ingress를 분리하는 것을 권장합니다.
+
+- **API Ingress** (`altcha.example.com`) — `/challenge` 엔드포인트를 브라우저에 노출. `/verify`는 클러스터 내부 Service로만 호출
+- **Demo Ingress** (`altcha-demo.example.com`) — 데모 페이지 테스트용. 운영에서는 제거
 
 `/verify`와 `/health/*`는 퍼블릭 Ingress에 노출하지 않습니다. UI 백엔드는 클러스터 내부 Service 주소로 직접 호출합니다.
 

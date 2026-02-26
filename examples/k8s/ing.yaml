@@ -3,6 +3,7 @@ kind: Ingress
 metadata:
   name: altcha
   annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
   ingressClassName: nginx
@@ -20,4 +21,29 @@ spec:
   tls:
   - hosts:
     - altcha.example.com
-    secretName: altcha-tls
+    secretName: altcha.example.com
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: altcha-demo
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: altcha-demo.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: altcha
+            port:
+              name: demo
+  tls:
+  - hosts:
+    - altcha-demo.example.com
+    secretName: altcha-demo.example.com

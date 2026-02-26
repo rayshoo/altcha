@@ -76,29 +76,20 @@ Access a shared ALTCHA service via VPC Peering or Transit Gateway.
  └─ Internal ALB ←── VPC Peering ←── [UI backends in dev/stg/prd VPCs]
 ```
 
-## Ingress Separation Example
+## TLS Required (Mobile Browsers)
 
-```yaml
-# Public Ingress — for browser challenge requests
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: altcha-public
-  annotations:
-    nginx.ingress.kubernetes.io/cors-enable: "true"
-spec:
-  rules:
-  - host: captcha.example.com
-    http:
-      paths:
-      - path: /challenge
-        pathType: Exact
-        backend:
-          service:
-            name: altcha
-            port:
-              number: 3000
-```
+The ALTCHA widget uses Web Workers to solve PoW in the browser. Mobile browsers (Chrome, Safari) **block blob URL Worker creation in insecure contexts (HTTP)**, so TLS (HTTPS) is mandatory.
+
+- `localhost` is treated as a secure context by browsers, so HTTP works locally
+- `http://<IP>` or `http://<domain>` is an insecure context where Workers are blocked
+- Ingress with TLS provides HTTPS access, resolving this issue
+
+## Ingress Separation
+
+It is recommended to separate API and demo Ingress resources.
+
+- **API Ingress** (`altcha.example.com`) — Exposes `/challenge` endpoint to browsers. `/verify` should only be called via internal cluster Service
+- **Demo Ingress** (`altcha-demo.example.com`) — For demo page testing. Remove in production
 
 Do not expose `/verify` or `/health/*` through the public Ingress. The UI backend should call these via the internal cluster Service address.
 
