@@ -35,4 +35,5 @@ func (s *MemoryStore) Add(token string) error {
 	return nil
 }
 
+func (s *MemoryStore) Ping() error  { return nil }
 func (s *MemoryStore) Close() error { return nil }

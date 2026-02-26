@@ -69,4 +69,8 @@ func (s *RedisStore) Add(token string) error {
 	return s.client.Set(context.Background(), "altcha:"+token, "1", s.ttl).Err()
 }
 
+func (s *RedisStore) Ping() error {
+	return s.client.Ping(context.Background()).Err()
+}
+
 func (s *RedisStore) Close() error { return s.closer() }

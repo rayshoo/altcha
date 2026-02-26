@@ -5,6 +5,8 @@ import (
 	"runtime"
 
 	"github.com/labstack/echo/v4"
+
+	"altcha/pkg/store"
 )
 
 type healthResponse struct {
@@ -15,8 +17,16 @@ type healthResponse struct {
 
 var Version = "dev"
 
-func Health() echo.HandlerFunc {
+func Health(s store.Store) echo.HandlerFunc {
 	return func(c echo.Context) error {
+		if err := s.Ping(); err != nil {
+			return c.JSON(http.StatusServiceUnavailable, healthResponse{
+				Status:  "unavailable",
+				Version: Version,
+				Go:      runtime.Version(),
+			})
+		}
+
 		return c.JSON(http.StatusOK, healthResponse{
 			Status:  "ok",
 			Version: Version,

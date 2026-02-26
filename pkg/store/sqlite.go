@@ -55,4 +55,5 @@ func (s *SQLiteStore) Add(token string) error {
 	return err
 }
 
+func (s *SQLiteStore) Ping() error  { return s.db.Ping() }
 func (s *SQLiteStore) Close() error { return s.db.Close() }
