@@ -9,3 +9,6 @@ secretGenerator:
 - name: altcha-secret
   envs:
   - .env
+images:
+- name: docker.io/rayshoo/altcha
+  newTag: latest

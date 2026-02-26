@@ -17,7 +17,17 @@ type healthResponse struct {
 
 var Version = "dev"
 
-func Health(s store.Store) echo.HandlerFunc {
+func HealthLive() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		return c.JSON(http.StatusOK, healthResponse{
+			Status:  "ok",
+			Version: Version,
+			Go:      runtime.Version(),
+		})
+	}
+}
+
+func HealthReady(s store.Store) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		if err := s.Ping(); err != nil {
 			return c.JSON(http.StatusServiceUnavailable, healthResponse{

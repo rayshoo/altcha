@@ -38,7 +38,8 @@ func NewAPIServer(cfg *config.Config, s store.Store) *echo.Echo {
 	e.GET("/", func(c echo.Context) error {
 		return c.NoContent(http.StatusNoContent)
 	})
-	e.GET("/health", handler.Health(s))
+	e.GET("/health/live", handler.HealthLive())
+	e.GET("/health/ready", handler.HealthReady(s))
 	e.GET("/challenge", handler.Challenge(cfg))
 	e.GET("/verify", handler.Verify(cfg, s))
 

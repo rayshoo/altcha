@@ -1,6 +1,6 @@
 VERSION ?= dev
 
-.PHONY: build run dev docker-build docker-up clean lint
+.PHONY: build run dev docker-build docker-up clean lint release
 
 build:
 	go build -ldflags "-X altcha/pkg/handler.Version=$(VERSION)" -o bin/server ./cmd/server
@@ -22,3 +22,11 @@ clean:
 
 lint:
 	golangci-lint run ./...
+
+release:
+	@if [ -z "$(version)" ]; then echo "Usage: make release version=x.x.x"; exit 1; fi
+	sed -i 's/newTag: .*/newTag: $(version)/' examples/k8s/kustomization.yaml
+	git add examples/k8s/kustomization.yaml
+	git commit -m "release: $(version)"
+	git tag -f $(version)
+	git push origin HEAD --tags
