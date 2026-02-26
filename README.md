@@ -28,6 +28,10 @@ docker compose up --build
 
 [English](./docs/en/widget-customization.md) | [한국어](./docs/ko/widget-customization.md)
 
+## Production Architecture
+
+[English](./docs/en/production-architecture.md) | [한국어](./docs/ko/production-architecture.md)
+
 ## License
 
 [MIT](./LICENSE) © rayshoo

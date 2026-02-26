@@ -39,8 +39,9 @@ func main() {
 	if cfg.Demo {
 		demoServer := server.NewDemoServer(cfg)
 		go func() {
-			fmt.Println("[ALTCHA]: Captcha Test Server is running at http://localhost:8080")
-			if err := demoServer.Start("0.0.0.0:8080"); err != nil {
+			addr := fmt.Sprintf("0.0.0.0:%d", cfg.DemoPort)
+			fmt.Printf("[ALTCHA]: Captcha Test Server is running at http://localhost:%d\n", cfg.DemoPort)
+			if err := demoServer.Start(addr); err != nil {
 				fmt.Printf("[ALTCHA]: Demo server stopped: %v\n", err)
 			}
 		}()

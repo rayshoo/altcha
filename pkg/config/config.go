@@ -21,6 +21,7 @@ type Config struct {
 	SQLitePath   string
 	RedisURL     string
 	RedisCluster bool
+	DemoPort     int
 }
 
 func (c *Config) IsDebug() bool {
@@ -42,6 +43,7 @@ func Load() *Config {
 		SQLitePath:    envStr("SQLITE_PATH", "data/altcha.db"),
 		RedisURL:      envStr("REDIS_URL", "redis://localhost:6379"),
 		RedisCluster:  envBool("REDIS_CLUSTER", false),
+		DemoPort:      envInt("DEMO_PORT", 8080),
 	}
 
 	if cfg.Secret == "$ecret.key" {
