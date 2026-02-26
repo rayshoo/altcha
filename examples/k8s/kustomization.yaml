@@ -11,4 +11,4 @@ secretGenerator:
   - .env
 images:
 - name: docker.io/rayshoo/altcha
-  newTag: latest
+  newTag: v1.0.0-alpha0
