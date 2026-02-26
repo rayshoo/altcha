@@ -19,15 +19,15 @@ const addMinutesToDate = (date: Date, n: number) => {
   app.use(helmet());
   app.use(express.json());
 
-  const corsOptions = {
-    origin: '*'
-  };
-  
-  app.use(cors(corsOptions)); 
+  const corsOrigin = process.env.CORS_ORIGIN
+    ? process.env.CORS_ORIGIN.split(',').map(s => s.trim())
+    : '*';
+  app.use(cors({ origin: corsOrigin }));
 
   const port = process.env.PORT || 3000;
   const hmacKey = process.env.SECRET as string;
   const expireMinutes = (process.env.EXPIREMINUTES || 10) as number;
+  const maxNumber = (process.env.MAXNUMBER || 1000000) as number;
   const maxRecords = (process.env.MAXRECORDS || 1000) as number;
   const recordCache: string[] = [];
 
@@ -38,7 +38,7 @@ const addMinutesToDate = (date: Date, n: number) => {
   });
 
   app.get("/challenge", async (req: Request, res: Response) => {
-    const challenge = await createChallenge({ hmacKey, expires: addMinutesToDate(new Date(), expireMinutes) });
+    const challenge = await createChallenge({ hmacKey, maxnumber: maxNumber, expires: addMinutesToDate(new Date(), expireMinutes) });
     res.status(200).json(challenge);
   });
 
@@ -66,9 +66,9 @@ if (process.env.DEMO?.toLowerCase() === "true") {
       contentSecurityPolicy: {
         useDefaults: true,
         directives: {
-          "script-src": ["'self'", "https://cdn.jsdelivr.net", "http://localhost:3000", "http://localhost:8080"],
-          "connect-src": ["'self'", "http://localhost:3000", "http://localhost:8080", "blob://*"],
-          "worker-src": ["'self'", "http://localhost:3000", "http://localhost:8080", "blob://*"],
+          "script-src": ["'self'", "https://cdn.jsdelivr.net"],
+          "connect-src": ["'self'", "https://cdn.jsdelivr.net", "blob://*"],
+          "worker-src": ["'self'", "blob://*"],
         }
       }
     }));
@@ -82,9 +82,18 @@ if (process.env.DEMO?.toLowerCase() === "true") {
       res.sendFile(path.join(__dirname, '/demo/index.html'));
     });
 
+    app.get("/challenge", async (req: Request, res: Response) => {
+      try {
+        const result = await axios.get(`http://localhost:${process.env.PORT || 3000}/challenge`);
+        res.json(result.data);
+      } catch(ex: any) {
+        res.sendStatus(ex.status || 500);
+      }
+    });
+
     app.post("/test", async (req: Request, res: Response) => {
       try {
-        var result = await axios.get("http://localhost:3000/verify", { params: {altcha: req.body.altcha }})
+        var result = await axios.get(`http://localhost:${process.env.PORT || 3000}/verify`, { params: {altcha: req.body.altcha }})
         res.sendStatus(result.status);
       } catch(ex: any) {
         //console.error(ex);
