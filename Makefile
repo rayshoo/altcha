@@ -9,7 +9,7 @@ run: build
 	./bin/server
 
 dev:
-	go run ./cmd/server
+	air
 
 docker-build:
 	docker compose build

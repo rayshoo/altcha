@@ -15,6 +15,11 @@ type Config struct {
 	MaxRecords    int
 	CorsOrigin    []string
 	Demo          bool
+	LogLevel      string
+}
+
+func (c *Config) IsDebug() bool {
+	return strings.EqualFold(c.LogLevel, "debug")
 }
 
 func Load() *Config {
@@ -26,6 +31,7 @@ func Load() *Config {
 		MaxRecords:    envInt("MAXRECORDS", 1000),
 		CorsOrigin:    envList("CORS_ORIGIN", nil),
 		Demo:          envBool("DEMO", false),
+		LogLevel:      envStr("LOG_LEVEL", "info"),
 	}
 
 	if cfg.Secret == "$ecret.key" {

@@ -15,6 +15,10 @@ func NewAPIServer(cfg *config.Config) *echo.Echo {
 	e := echo.New()
 	e.HideBanner = true
 
+	e.Use(echomw.LoggerWithConfig(echomw.LoggerConfig{
+		Format: "[API] ${time_rfc3339} ${remote_ip} ${method} ${uri} ${status} ${latency_human}\n",
+	}))
+
 	if len(cfg.CorsOrigin) > 0 {
 		e.Use(echomw.CORSWithConfig(echomw.CORSConfig{
 			AllowOrigins: cfg.CorsOrigin,
@@ -37,6 +41,11 @@ func NewDemoServer(cfg *config.Config) *echo.Echo {
 	e := echo.New()
 	e.HideBanner = true
 
+	if cfg.IsDebug() {
+		e.Use(echomw.LoggerWithConfig(echomw.LoggerConfig{
+			Format: "[DEMO] ${time_rfc3339} ${remote_ip} ${method} ${uri} ${status} ${latency_human}\n",
+		}))
+	}
 	e.Use(middleware.DemoCSP())
 
 	e.GET("/", handler.DemoPage())
