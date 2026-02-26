@@ -1,4 +1,2 @@
-.yarn/sdks
-.yarn/unplugged
-build/
-node_modules/
+bin/
+.env

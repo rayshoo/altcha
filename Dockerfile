@@ -1,28 +1,15 @@
-# syntax=docker/dockerfile:1
-
-FROM oven/bun:1 AS base
-
-WORKDIR /usr/src/app
-
-FROM base AS build
-
-RUN --mount=type=bind,source=package.json,target=package.json \
-    --mount=type=bind,source=bun.lock,target=bun.lock \
-    bun i --frozen-lockfile
-
+FROM golang:1.24-alpine AS build
+WORKDIR /app
+COPY go.mod go.sum ./
+RUN go mod download
 COPY . .
-RUN bun run build
+ARG VERSION=dev
+RUN CGO_ENABLED=0 go build -ldflags "-X altcha/pkg/handler.Version=${VERSION}" -o /server ./cmd/server
 
-FROM base AS final
-
-ENV NODE_ENV=production
-USER bun
-COPY package.json .
-COPY .env .
-COPY src/demo/index.html ./build/demo/index.html
-COPY --from=build /usr/src/app/node_modules ./node_modules
-COPY --from=build /usr/src/app/build ./build
-
+FROM alpine:3.21
+RUN apk add --no-cache ca-certificates
+COPY --from=build /server /server
+COPY .env .env
+COPY web/ web/
 EXPOSE 3000
-
-CMD ["bun", "start"]
+CMD ["/server"]
