@@ -43,7 +43,7 @@ func Load() *Config {
 		SQLitePath:    envStr("SQLITE_PATH", "data/altcha.db"),
 		RedisURL:      envStr("REDIS_URL", "redis://localhost:6379"),
 		RedisCluster:  envBool("REDIS_CLUSTER", false),
-		DemoPort:      envInt("DEMO_PORT", 8080),
+		DemoPort:      envInt("DEMO_PORT", 8000),
 	}
 
 	if cfg.Secret == "$ecret.key" {
