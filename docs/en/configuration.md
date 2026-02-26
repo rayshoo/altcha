@@ -14,6 +14,7 @@
 | STORE | | `memory` | Token store: `memory`, `sqlite`, `redis` |
 | SQLITE_PATH | | `data/altcha.db` | SQLite file path (when STORE=sqlite) |
 | REDIS_URL | | `redis://localhost:6379` | Redis connection URL (when STORE=redis) |
+| REDIS_CLUSTER | | `false` | Use cluster mode when `true` (ElastiCache, Valkey, etc.) |
 | LOG_LEVEL | | `info` | `info`: API logs only, `debug`: API + demo logs |
 | DEMO | | `false` | Start demo UI on port 8080 when `true` |
 
@@ -77,7 +78,24 @@ Shared store. Multiple instances (pods) can share the same Redis for horizontal 
 - Uses `EXPIREMINUTES` as TTL for automatic expiration.
 - `MAXRECORDS` setting is ignored (TTL handles cleanup).
 
+Single node:
+
 ```env
 STORE=redis
 REDIS_URL=redis://redis-host:6379
+```
+
+Cluster (ElastiCache, Valkey, etc. with single endpoint):
+
+```env
+STORE=redis
+REDIS_URL=redis://cluster-endpoint:6379
+REDIS_CLUSTER=true
+```
+
+Cluster (multiple nodes, auto-detected):
+
+```env
+STORE=redis
+REDIS_URL=redis://node1:6379,redis://node2:6379,redis://node3:6379
 ```

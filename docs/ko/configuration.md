@@ -14,6 +14,7 @@
 | STORE | | `memory` | 토큰 저장소: `memory`, `sqlite`, `redis` |
 | SQLITE_PATH | | `data/altcha.db` | SQLite 파일 경로 (STORE=sqlite 시) |
 | REDIS_URL | | `redis://localhost:6379` | Redis 연결 URL (STORE=redis 시) |
+| REDIS_CLUSTER | | `false` | `true` 시 클러스터 모드 사용 (ElastiCache, Valkey 등) |
 | LOG_LEVEL | | `info` | `info`: API 로그만, `debug`: API + 데모 로그 |
 | DEMO | | `false` | `true` 시 포트 8080에서 데모 UI 시작 |
 
@@ -77,7 +78,24 @@ MAXRECORDS=1000
 - `EXPIREMINUTES`를 TTL로 사용하여 자동 만료됩니다.
 - `MAXRECORDS` 설정은 무시됩니다 (TTL이 정리를 담당).
 
+단일 노드:
+
 ```env
 STORE=redis
 REDIS_URL=redis://redis-host:6379
+```
+
+클러스터 (ElastiCache, Valkey 등 단일 엔드포인트):
+
+```env
+STORE=redis
+REDIS_URL=redis://cluster-endpoint:6379
+REDIS_CLUSTER=true
+```
+
+클러스터 (여러 노드 직접 지정, 자동 감지):
+
+```env
+STORE=redis
+REDIS_URL=redis://node1:6379,redis://node2:6379,redis://node3:6379
 ```

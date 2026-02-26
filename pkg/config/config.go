@@ -17,9 +17,10 @@ type Config struct {
 	Demo          bool
 	LogLevel      string
 	RateLimit     float64
-	Store         string
-	SQLitePath    string
-	RedisURL      string
+	Store        string
+	SQLitePath   string
+	RedisURL     string
+	RedisCluster bool
 }
 
 func (c *Config) IsDebug() bool {
@@ -40,6 +41,7 @@ func Load() *Config {
 		Store:         envStr("STORE", "memory"),
 		SQLitePath:    envStr("SQLITE_PATH", "data/altcha.db"),
 		RedisURL:      envStr("REDIS_URL", "redis://localhost:6379"),
+		RedisCluster:  envBool("REDIS_CLUSTER", false),
 	}
 
 	if cfg.Secret == "$ecret.key" {

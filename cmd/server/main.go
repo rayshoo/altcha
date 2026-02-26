@@ -58,7 +58,7 @@ func initStore(cfg *config.Config) (store.Store, error) {
 	case "sqlite":
 		return store.NewSQLiteStore(cfg.SQLitePath, cfg.MaxRecords)
 	case "redis":
-		return store.NewRedisStore(cfg.RedisURL, cfg.ExpireMinutes)
+		return store.NewRedisStore(cfg.RedisURL, cfg.RedisCluster, cfg.ExpireMinutes)
 	default:
 		return store.NewMemoryStore(cfg.MaxRecords), nil
 	}
