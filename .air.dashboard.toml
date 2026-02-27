@@ -1,0 +1,12 @@
+root = "."
+tmp_dir = "tmp"
+
+[build]
+  cmd = "go build -o ./tmp/dashboard.exe ./cmd/dashboard"
+  bin = "./tmp/dashboard.exe"
+  include_ext = ["go", "html", "js", "css"]
+  exclude_dir = ["tmp", "bin"]
+  delay = 500
+
+[misc]
+  clean_on_exit = true
