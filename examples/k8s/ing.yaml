@@ -1,3 +1,5 @@
+# Public Ingress: expose only /challenge externally
+# /verify is separated into an internal Ingress since only backends call it
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -11,8 +13,8 @@ spec:
   - host: altcha.example.com
     http:
       paths:
-      - path: /
-        pathType: Prefix
+      - path: /challenge
+        pathType: Exact
         backend:
           service:
             name: altcha
@@ -23,6 +25,29 @@ spec:
     - altcha.example.com
     secretName: altcha.example.com
 ---
+# Internal Ingress: /verify accessible only within the cluster
+# If the backend is in the same cluster, you can call via Service DNS (http://altcha:3000/verify) directly
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: altcha-internal
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  ingressClassName: nginx-internal
+  rules:
+  - host: altcha.internal.example.com
+    http:
+      paths:
+      - path: /verify
+        pathType: Exact
+        backend:
+          service:
+            name: altcha
+            port:
+              name: http
+---
+# Demo Ingress (optional): only used when DEMO=true
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
