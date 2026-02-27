@@ -12,7 +12,6 @@ LABEL maintainer="rayshoo <fire@dragonz.dev>"
 RUN apk add --no-cache ca-certificates
 COPY --from=build /server /server
 COPY --from=build /dashboard /dashboard
-COPY .env .env
 COPY web/ web/
 EXPOSE 3000
 CMD ["/server"]
