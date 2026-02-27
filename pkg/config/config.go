@@ -33,7 +33,7 @@ func Load() *Config {
 		Port:          envInt("PORT", 3000),
 		Secret:        envStr("SECRET", "$ecret.key"),
 		ExpireMinutes: envInt("EXPIREMINUTES", 10),
-		MaxNumber:     envInt("MAXNUMBER", 1000000),
+		MaxNumber:     envInt("COMPLEXITY", 1000000),
 		MaxRecords:    envInt("MAXRECORDS", 1000),
 		CorsOrigin:    envList("CORS_ORIGIN", nil),
 		Demo:          envBool("DEMO", false),

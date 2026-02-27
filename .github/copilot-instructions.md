@@ -35,7 +35,7 @@
 - `SECRET` (required): HMAC key for ALTCHA. Default `$ecret.key` is unsafe; code logs a warning if used.
 - `PORT`: API port (default 3000).
 - `EXPIREMINUTES`: challenge expiry minutes (default 10).
-- `MAXNUMBER`: max number for PoW difficulty (default 1000000).
+- `COMPLEXITY`: PoW complexity / max number for difficulty (default 1000000).
 - `MAXRECORDS`: in-memory single-use token cache size (default 1000).
 - `CORS_ORIGIN`: comma-separated allowed origins; defaults to `*` if unset.
 - `RATE_LIMIT`: requests per second per IP (0 or unset = unlimited).
