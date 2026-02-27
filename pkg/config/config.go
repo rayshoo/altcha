@@ -10,6 +10,7 @@ import (
 type Config struct {
 	Port          int
 	Secret        string
+	Algorithm     string
 	ExpireMinutes int
 	MaxNumber     int
 	MaxRecords    int
@@ -59,6 +60,7 @@ func Load() *Config {
 	cfg := &Config{
 		Port:          envInt("PORT", 3000),
 		Secret:        envStr("SECRET", "$ecret.key"),
+		Algorithm:     envStr("ALGORITHM", "SHA-256"),
 		ExpireMinutes: envInt("EXPIREMINUTES", 10),
 		MaxNumber:     envInt("COMPLEXITY", 1000000),
 		MaxRecords:    envInt("MAXRECORDS", 1000),

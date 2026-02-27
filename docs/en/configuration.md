@@ -5,6 +5,7 @@
 | Variable | Required | Default | Description |
 |---|---|---|---|
 | SECRET | Yes | `$ecret.key` | HMAC signing/verification key. Must be changed in production |
+| ALGORITHM | | `SHA-256` | Hash algorithm: `SHA-256`, `SHA-512`, `SHA-1` |
 | PORT | | `3000` | API server port |
 | EXPIREMINUTES | | `10` | Challenge expiry in minutes. User must submit within this time |
 | COMPLEXITY | | `1000000` | PoW complexity. Higher values increase client browser computation time |

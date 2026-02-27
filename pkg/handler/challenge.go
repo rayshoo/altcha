@@ -15,6 +15,7 @@ func Challenge(cfg *config.Config) echo.HandlerFunc {
 		expires := time.Now().Add(time.Duration(cfg.ExpireMinutes) * time.Minute)
 
 		challenge, err := altcha.CreateChallenge(altcha.ChallengeOptions{
+			Algorithm: altcha.Algorithm(cfg.Algorithm),
 			HMACKey:   cfg.Secret,
 			MaxNumber: int64(cfg.MaxNumber),
 			Expires:   &expires,

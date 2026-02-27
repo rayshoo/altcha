@@ -45,6 +45,7 @@
 ## Configuration (env)
 
 - `SECRET` (required): HMAC key for ALTCHA. Default `$ecret.key` is unsafe; code logs a warning if used.
+- `ALGORITHM`: hash algorithm: `SHA-256` (default), `SHA-512`, `SHA-1`.
 - `PORT`: API port (default 3000).
 - `EXPIREMINUTES`: challenge expiry minutes (default 10).
 - `COMPLEXITY`: PoW complexity / max number for difficulty (default 1000000).
