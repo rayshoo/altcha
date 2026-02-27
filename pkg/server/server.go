@@ -2,6 +2,7 @@ package server
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/labstack/echo/v4"
 	echomw "github.com/labstack/echo/v4/middleware"
@@ -18,9 +19,15 @@ func NewAPIServer(cfg *config.Config, s store.Store, collector *analytics.Collec
 	e := echo.New()
 	e.HideBanner = true
 
-	e.Use(echomw.LoggerWithConfig(echomw.LoggerConfig{
+	loggerConfig := echomw.LoggerConfig{
 		Format: "[API] ${time_rfc3339} ${remote_ip} ${method} ${uri} ${status} ${latency_human}\n",
-	}))
+	}
+	if !cfg.IsDebug() {
+		loggerConfig.Skipper = func(c echo.Context) bool {
+			return strings.HasPrefix(c.Path(), "/health/")
+		}
+	}
+	e.Use(echomw.LoggerWithConfig(loggerConfig))
 
 	if cfg.RateLimit > 0 {
 		e.Use(echomw.RateLimiter(echomw.NewRateLimiterMemoryStore(
