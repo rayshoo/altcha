@@ -22,7 +22,7 @@ spec:
           containerPort: 3000
           protocol: TCP
         - name: demo
-          containerPort: 8080
+          containerPort: 8000
           protocol: TCP
         envFrom:
         - secretRef:

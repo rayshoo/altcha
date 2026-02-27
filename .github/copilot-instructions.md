@@ -17,7 +17,7 @@
 - `pkg/server/server.go`: Echo server creation and route registration.
 - `web/demo/index.html`: Demo UI page.
 - `Dockerfile`: multi-stage Go build; copies `.env` and `web/` into image.
-- `compose.yaml`: exposes 3000 (API) and 8080 (demo); sets `SECRET` (default is placeholder).
+- `compose.yaml`: exposes 3000 (API) and 8000 (demo); sets `SECRET` (default is placeholder).
 - `Makefile`: `build`, `run`, `dev`, `docker-build`, `docker-up`, `clean`, `lint`.
 
 ## Build & run
@@ -44,7 +44,7 @@
 - `REDIS_URL`: Redis connection URL (default `redis://localhost:6379`, used when STORE=redis).
 - `REDIS_CLUSTER`: set `true` for cluster mode (ElastiCache, Valkey); also auto-detected when REDIS_URL contains commas.
 - `LOG_LEVEL`: `info` (API logs only, default) or `debug` (API + demo logs).
-- `DEMO`: when `true`, serve demo on 8080 with CSP middleware.
+- `DEMO`: when `true`, serve demo on 8000 with CSP middleware.
 - `.env` is loaded by `godotenv` at runtime; Dockerfile also copies `.env` into image.
 
 ## API contracts (keep stable)
@@ -74,7 +74,7 @@
 - Test verify manually:
   - PowerShell: `curl "http://localhost:3000/verify?altcha=$([uri]::EscapeDataString($payload))" -Method GET -UseBasicParsing`
   - Unix: `curl -G --data-urlencode "altcha=$payload" http://localhost:3000/verify -i`
-- Enable demo: set `DEMO=true` and open `http://localhost:8080`.
+- Enable demo: set `DEMO=true` and open `http://localhost:8000`.
 
 ## Gotchas
 

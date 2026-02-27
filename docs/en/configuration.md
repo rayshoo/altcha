@@ -16,7 +16,7 @@
 | REDIS_URL | | `redis://localhost:6379` | Redis connection URL (when STORE=redis) |
 | REDIS_CLUSTER | | `false` | Use cluster mode when `true` (ElastiCache, Valkey, etc.) |
 | LOG_LEVEL | | `info` | `info`: API logs only, `debug`: API + demo logs |
-| DEMO | | `false` | Start demo UI on port 8080 when `true` |
+| DEMO | | `false` | Start demo UI on port 8000 when `true` |
 
 ### Challenge Settings
 

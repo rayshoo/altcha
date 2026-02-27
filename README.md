@@ -14,7 +14,7 @@ docker compose up --build
 ```
 
 - API: http://localhost:3000
-- Demo (`DEMO=true`): http://localhost:8080
+- Demo (`DEMO=true`): http://localhost:8000
 
 ## Documentation
 

@@ -16,7 +16,7 @@
 | REDIS_URL | | `redis://localhost:6379` | Redis 연결 URL (STORE=redis 시) |
 | REDIS_CLUSTER | | `false` | `true` 시 클러스터 모드 사용 (ElastiCache, Valkey 등) |
 | LOG_LEVEL | | `info` | `info`: API 로그만, `debug`: API + 데모 로그 |
-| DEMO | | `false` | `true` 시 포트 8080에서 데모 UI 시작 |
+| DEMO | | `false` | `true` 시 포트 8000에서 데모 UI 시작 |
 
 ### 챌린지 관련
 
