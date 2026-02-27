@@ -2,9 +2,9 @@
 
 # ALTCHA
 
-A lightweight ALTCHA challenge/verify service built with Go and Echo. Provides simple API endpoints for challenge generation and solution verification, with an optional demo UI.
+A self-hosted ALTCHA proof-of-work challenge server built with Go. Provides challenge generation and solution verification APIs, with an analytics dashboard (PostgreSQL, GeoIP) and Keycloak(OIDC) authentication support.
 
-Go(Echo) 기반의 경량 ALTCHA 챌린지/검증 서비스입니다. 챌린지 생성 및 솔루션 검증을 위한 간단한 API 엔드포인트를 제공하며, 선택적으로 데모 UI를 포함합니다.
+Go 기반의 셀프호스팅 ALTCHA 챌린지 서버입니다. 챌린지 생성 및 솔루션 검증 API를 제공하며, 분석 대시보드(PostgreSQL, GeoIP)와 Keycloak(OIDC) 인증을 지원합니다.
 
 ## Quick Start
 
