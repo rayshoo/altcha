@@ -14,6 +14,40 @@ spec:
       labels:
         app: altcha
     spec:
+      initContainers:
+      - name: geoip-download
+        image: alpine:3.21
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          if [ -z "$GEOIP_LICENSE_KEY" ]; then
+            echo "[GEOIP] GEOIP_LICENSE_KEY not set, skipping download"
+            exit 0
+          fi
+          URL="https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country&license_key=${GEOIP_LICENSE_KEY}&suffix=tar.gz"
+          echo "[GEOIP] Downloading GeoLite2-Country..."
+          wget -q -O /tmp/geoip.tar.gz "$URL"
+          if [ $? -ne 0 ]; then
+            echo "[GEOIP] WARNING: download failed, continuing without GeoIP"
+            exit 0
+          fi
+          tar -xzf /tmp/geoip.tar.gz -C /tmp
+          cp /tmp/GeoLite2-Country_*/GeoLite2-Country.mmdb /geoip/GeoLite2-Country.mmdb
+          if [ $? -eq 0 ]; then
+            echo "[GEOIP] GeoLite2-Country.mmdb ready"
+          else
+            echo "[GEOIP] WARNING: extraction failed, continuing without GeoIP"
+          fi
+        env:
+        - name: GEOIP_LICENSE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: altcha-secret
+              key: GEOIP_LICENSE_KEY
+              optional: true
+        volumeMounts:
+        - name: geoip
+          mountPath: /geoip
       containers:
       - name: altcha
         image: docker.io/rayshoo/altcha:latest
@@ -27,6 +61,9 @@ spec:
         envFrom:
         - secretRef:
             name: altcha-secret
+        env:
+        - name: GEOIP_DB
+          value: /geoip/GeoLite2-Country.mmdb
         livenessProbe:
           httpGet:
             path: /health/live
@@ -46,3 +83,10 @@ spec:
           limits:
             cpu: 200m
             memory: 128Mi
+        volumeMounts:
+        - name: geoip
+          mountPath: /geoip
+          readOnly: true
+      volumes:
+      - name: geoip
+        emptyDir: {}
