@@ -8,6 +8,7 @@ import (
 
 	"github.com/joho/godotenv"
 
+	"altcha/pkg/analytics"
 	"altcha/pkg/config"
 	"altcha/pkg/server"
 	"altcha/pkg/store"
@@ -27,7 +28,18 @@ func main() {
 
 	fmt.Printf("[ALTCHA]: Using %s store\n", cfg.Store)
 
-	apiServer := server.NewAPIServer(cfg, s)
+	var collector *analytics.Collector
+	if cfg.AnalyticsEnabled() {
+		collector, err = analytics.NewCollector(cfg.PostgresURL, cfg.GeoIPDB)
+		if err != nil {
+			fmt.Printf("[ALTCHA]: Failed to initialize analytics: %v\n", err)
+			os.Exit(1)
+		}
+		defer collector.Close()
+		fmt.Println("[ALTCHA]: Analytics enabled (PostgreSQL)")
+	}
+
+	apiServer := server.NewAPIServer(cfg, s, collector)
 	go func() {
 		addr := fmt.Sprintf("0.0.0.0:%d", cfg.Port)
 		fmt.Printf("[ALTCHA]: Captcha Server is running at http://localhost:%d\n", cfg.Port)

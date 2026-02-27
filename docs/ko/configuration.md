@@ -17,6 +17,16 @@
 | REDIS_CLUSTER | | `false` | `true` 시 클러스터 모드 사용 (ElastiCache, Valkey 등) |
 | LOG_LEVEL | | `info` | `info`: API 로그만, `debug`: API + 데모 로그 |
 | DEMO | | `false` | `true` 시 포트 8000에서 데모 UI 시작 |
+| POSTGRES_URL | | | PostgreSQL 연결 URL. 설정 시 분석(analytics) 활성화 |
+| GEOIP_DB | | | GeoLite2-Country.mmdb 경로 (선택, 국가별 통계 활성화) |
+| DASHBOARD_PORT | | `9000` | 대시보드 서버 포트 |
+| AUTH_PROVIDER | | | 대시보드 인증 방식: `basic` 또는 `keycloak` |
+| AUTH_USERNAME | | | Basic 인증 사용자명 |
+| AUTH_PASSWORD | | | Basic 인증 비밀번호 |
+| AUTH_ISSUER | | | Keycloak realm URL |
+| AUTH_CLIENT_ID | | | OIDC 클라이언트 ID |
+| AUTH_CLIENT_SECRET | | | OIDC 클라이언트 시크릿 |
+| AUTH_PKCE | | `true` | PKCE 사용 여부 |
 
 ### 챌린지 관련
 

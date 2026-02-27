@@ -1,15 +1,28 @@
 VERSION ?= dev
 
-.PHONY: build run dev docker-build docker-up clean lint release
+.PHONY: build build-dashboard build-all run dev dev-server dev-dashboard psql docker-build docker-up clean lint release
 
 build:
 	go build -ldflags "-X altcha/pkg/handler.Version=$(VERSION)" -o bin/server ./cmd/server
 
+build-dashboard:
+	go build -ldflags "-X altcha/pkg/handler.Version=$(VERSION)" -o bin/dashboard ./cmd/dashboard
+
+build-all: build build-dashboard
+
 run: build
 	./bin/server
 
-dev:
-	air
+dev-server:
+	air -c .air.server.toml
+
+dev-dashboard:
+	air -c .air.dashboard.toml
+
+dev: dev-server
+
+psql:
+	docker compose up -d postgres
 
 docker-build:
 	docker compose build

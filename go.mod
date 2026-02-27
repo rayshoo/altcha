@@ -6,8 +6,11 @@ toolchain go1.24.1
 
 require (
 	github.com/altcha-org/altcha-lib-go v0.2.0
+	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo/v4 v4.13.3
+	github.com/lib/pq v1.11.2
+	github.com/oschwald/maxminddb-golang v1.13.1
 	github.com/redis/go-redis/v9 v9.18.0
 	golang.org/x/time v0.8.0
 	modernc.org/sqlite v1.46.1

@@ -1,9 +1,40 @@
 services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: altcha
+      POSTGRES_PASSWORD: altcha
+      POSTGRES_DB: altcha
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
   server:
     build:
       context: .
     environment:
       SECRET: $ecret.key
+      POSTGRES_URL: postgres://altcha:altcha@postgres:5432/altcha?sslmode=disable
     ports:
       - 3000:3000
       - 8000:8000
+    depends_on:
+      - postgres
+
+  dashboard:
+    build:
+      context: .
+    command: ["/dashboard"]
+    environment:
+      POSTGRES_URL: postgres://altcha:altcha@postgres:5432/altcha?sslmode=disable
+      AUTH_PROVIDER: basic
+      AUTH_USERNAME: admin
+      AUTH_PASSWORD: admin
+    ports:
+      - 9000:9000
+    depends_on:
+      - postgres
+
+volumes:
+  pgdata:

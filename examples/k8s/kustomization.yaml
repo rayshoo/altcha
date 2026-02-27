@@ -5,6 +5,8 @@ resources:
 - svc.yaml
 - ing.yaml
 - pdb.yaml
+- dashboard-deploy.yaml
+- dashboard-svc.yaml
 secretGenerator:
 - name: altcha-secret
   envs:

@@ -93,6 +93,23 @@ API 서버와 데모 서버의 Ingress를 분리하는 것을 권장합니다.
 
 `/verify`와 `/health/*`는 퍼블릭 Ingress에 노출하지 않습니다. UI 백엔드는 클러스터 내부 Service 주소로 직접 호출합니다.
 
+## 대시보드 배포
+
+대시보드는 API 서버와 동일한 Docker 이미지에서 `/dashboard` 명령으로 실행합니다. 별도의 Deployment로 배포하고 내부 Ingress로만 노출합니다.
+
+```
+[브라우저 (관리자)] ──→ [Dashboard :9000] ──→ [PostgreSQL]
+                                                   ↑
+[브라우저 (사용자)] ──→ [API Server :3000] ────────┘
+```
+
+- 대시보드와 API 서버가 동일한 PostgreSQL을 공유
+- API 서버는 `POSTGRES_URL` 설정 시 자동으로 이벤트를 기록
+- 대시보드는 `nginx-internal` Ingress 클래스로 내부 네트워크에서만 접근 가능
+- Basic Auth 또는 Keycloak(OIDC)으로 인증
+
+자세한 내용은 [대시보드 문서](./dashboard.md)를 참고하세요.
+
 ## 환경변수 설정 예시
 
 ```bash

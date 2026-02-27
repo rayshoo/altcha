@@ -93,6 +93,23 @@ It is recommended to separate API and demo Ingress resources.
 
 Do not expose `/verify` or `/health/*` through the public Ingress. The UI backend should call these via the internal cluster Service address.
 
+## Dashboard Deployment
+
+The dashboard runs from the same Docker image using the `/dashboard` command. Deploy it as a separate Deployment and expose it only via an internal Ingress.
+
+```
+[Browser (admin)] ──→ [Dashboard :9000] ──→ [PostgreSQL]
+                                                  ↑
+[Browser (user)]  ──→ [API Server :3000] ────────┘
+```
+
+- Dashboard and API server share the same PostgreSQL
+- API server automatically records events when `POSTGRES_URL` is set
+- Dashboard is accessible only from the internal network via `nginx-internal` Ingress class
+- Authenticated via Basic Auth or Keycloak (OIDC)
+
+See the [Dashboard documentation](./dashboard.md) for details.
+
 ## Environment Variable Example
 
 ```bash

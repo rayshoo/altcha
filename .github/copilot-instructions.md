@@ -2,23 +2,35 @@
 
 ## Overview
 
-- Purpose: Dockerized ALTCHA challenge/verify microservice using Go + Echo. Provides `/challenge` and `/verify` used by the ALTCHA widget. Optional demo UI.
-- Key libs: `github.com/altcha-org/altcha-lib-go`, `github.com/labstack/echo/v4`, `github.com/joho/godotenv`.
-- Entrypoint: `cmd/server/main.go`.
+- Purpose: Dockerized ALTCHA challenge/verify microservice using Go + Echo. Provides `/challenge` and `/verify` used by the ALTCHA widget. Optional demo UI. Includes an analytics dashboard.
+- Key libs: `github.com/altcha-org/altcha-lib-go`, `github.com/labstack/echo/v4`, `github.com/joho/godotenv`, `github.com/lib/pq`, `github.com/oschwald/maxminddb-golang`, `github.com/golang-jwt/jwt/v5`.
+- Entrypoints: `cmd/server/main.go` (API server), `cmd/dashboard/main.go` (dashboard).
 
 ## Repo layout
 
-- `cmd/server/main.go`: Entrypoint; loads .env, parses config, starts API and optional demo server.
-- `pkg/config/config.go`: Config struct and env-var parsing with defaults.
+- `cmd/server/main.go`: API server entrypoint; loads .env, parses config, starts API and optional demo server. Initializes analytics collector when POSTGRES_URL is set.
+- `cmd/dashboard/main.go`: Dashboard entrypoint; requires POSTGRES_URL and AUTH_PROVIDER.
+- `pkg/config/config.go`: Config struct and env-var parsing with defaults. Includes analytics, dashboard, and auth fields.
 - `pkg/handler/challenge.go`: `GET /challenge` handler.
 - `pkg/handler/verify.go`: `GET /verify` handler with in-memory record cache.
 - `pkg/handler/demo.go`: Demo page serving and proxy handlers.
 - `pkg/middleware/security.go`: CSP header middleware for demo server.
-- `pkg/server/server.go`: Echo server creation and route registration.
+- `pkg/server/server.go`: Echo server creation and route registration. Accepts optional analytics collector.
+- `pkg/analytics/postgres.go`: Event collector with buffered channel and batch INSERT.
+- `pkg/analytics/geoip.go`: GeoIP lookup using MaxMind mmdb.
+- `pkg/analytics/middleware.go`: Echo middleware recording /challenge and /verify requests.
+- `pkg/analytics/queries.go`: Dashboard query functions (summary, timeseries, locations).
+- `pkg/auth/auth.go`: Auth provider interface and authorization logic.
+- `pkg/auth/basic.go`: HTTP Basic Auth provider.
+- `pkg/auth/oidc.go`: Keycloak OIDC provider with PKCE, JWKS, token refresh.
+- `pkg/auth/session.go`: In-memory session store with TTL cleanup.
+- `pkg/dashboard/server.go`: Dashboard Echo server setup.
+- `pkg/dashboard/handler.go`: Dashboard API handlers.
 - `web/demo/index.html`: Demo UI page.
-- `Dockerfile`: multi-stage Go build; copies `.env` and `web/` into image.
-- `compose.yaml`: exposes 3000 (API) and 8000 (demo); sets `SECRET` (default is placeholder).
-- `Makefile`: `build`, `run`, `dev`, `docker-build`, `docker-up`, `clean`, `lint`.
+- `web/dashboard/`: Dashboard SPA (vanilla HTML/JS/CSS with Chart.js).
+- `Dockerfile`: multi-stage Go build; builds `/server` and `/dashboard` binaries.
+- `compose.yaml`: postgres + server + dashboard services.
+- `Makefile`: `build`, `build-dashboard`, `build-all`, `run`, `dev`, `docker-build`, `docker-up`, `clean`, `lint`.
 
 ## Build & run
 
@@ -45,6 +57,14 @@
 - `REDIS_CLUSTER`: set `true` for cluster mode (ElastiCache, Valkey); also auto-detected when REDIS_URL contains commas.
 - `LOG_LEVEL`: `info` (API logs only, default) or `debug` (API + demo logs).
 - `DEMO`: when `true`, serve demo on 8000 with CSP middleware.
+- `POSTGRES_URL`: PostgreSQL connection URL. Enables analytics when set.
+- `GEOIP_DB`: path to GeoLite2-Country.mmdb for location statistics.
+- `DASHBOARD_PORT`: dashboard server port (default 9000).
+- `AUTH_PROVIDER`: dashboard auth method: `basic` or `keycloak`.
+- `AUTH_USERNAME` / `AUTH_PASSWORD`: Basic auth credentials.
+- `AUTH_ISSUER`, `AUTH_CLIENT_ID`, `AUTH_CLIENT_SECRET`: Keycloak OIDC settings.
+- `AUTH_PKCE`: enable PKCE (default true).
+- `AUTH_ALLOWED_USERS`, `AUTH_ALLOWED_GROUPS`, `AUTH_ALLOWED_ROLES`: access control (comma-separated, OR logic).
 - `.env` is loaded by `godotenv` at runtime; Dockerfile also copies `.env` into image.
 
 ## API contracts (keep stable)

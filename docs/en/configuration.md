@@ -17,6 +17,16 @@
 | REDIS_CLUSTER | | `false` | Use cluster mode when `true` (ElastiCache, Valkey, etc.) |
 | LOG_LEVEL | | `info` | `info`: API logs only, `debug`: API + demo logs |
 | DEMO | | `false` | Start demo UI on port 8000 when `true` |
+| POSTGRES_URL | | | PostgreSQL connection URL. Enables analytics when set |
+| GEOIP_DB | | | Path to GeoLite2-Country.mmdb (optional, enables location stats) |
+| DASHBOARD_PORT | | `9000` | Dashboard server port |
+| AUTH_PROVIDER | | | Dashboard auth method: `basic` or `keycloak` |
+| AUTH_USERNAME | | | Basic auth username |
+| AUTH_PASSWORD | | | Basic auth password |
+| AUTH_ISSUER | | | Keycloak realm URL |
+| AUTH_CLIENT_ID | | | OIDC client ID |
+| AUTH_CLIENT_SECRET | | | OIDC client secret |
+| AUTH_PKCE | | `true` | Enable PKCE |
 
 ### Challenge Settings
 

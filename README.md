@@ -14,6 +14,7 @@ docker compose up --build
 ```
 
 - API: http://localhost:3000
+- Dashboard: http://localhost:9000 (`admin`/`admin`)
 - Demo (`DEMO=true`): http://localhost:8000
 
 ## Documentation
@@ -27,6 +28,10 @@ docker compose up --build
 ## Widget Customization
 
 [English](./docs/en/widget-customization.md) | [한국어](./docs/ko/widget-customization.md)
+
+## Dashboard
+
+[English](./docs/en/dashboard.md) | [한국어](./docs/ko/dashboard.md)
 
 ## Production Architecture
 

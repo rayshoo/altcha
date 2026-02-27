@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ALTCHA Dashboard</title>
+  <link rel="stylesheet" href="/dashboard.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <h1>ALTCHA Dashboard</h1>
+    </div>
+    <div class="header-right">
+      <select id="range-select">
+        <option value="7">Last 7 days</option>
+        <option value="30">Last 30 days</option>
+        <option value="90">Last 90 days</option>
+        <option value="custom">Custom</option>
+      </select>
+      <div id="custom-range" class="hidden">
+        <input type="date" id="date-from">
+        <span>~</span>
+        <input type="date" id="date-to">
+        <button id="btn-apply">Apply</button>
+      </div>
+      <a href="/auth/logout" class="btn-logout">Logout</a>
+    </div>
+  </header>
+
+  <main>
+    <section id="kpi-section">
+      <div class="kpi-grid" id="kpi-grid"></div>
+    </section>
+
+    <section id="chart-section">
+      <h2>Request Trends</h2>
+      <div class="chart-container">
+        <canvas id="main-chart"></canvas>
+      </div>
+    </section>
+
+    <section id="locations-section">
+      <h2>Locations</h2>
+      <div id="locations-container"></div>
+    </section>
+  </main>
+
+  <script src="/dashboard.js"></script>
+</body>
+</html>

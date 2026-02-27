@@ -7,13 +7,14 @@ import (
 	echomw "github.com/labstack/echo/v4/middleware"
 	"golang.org/x/time/rate"
 
+	"altcha/pkg/analytics"
 	"altcha/pkg/config"
 	"altcha/pkg/handler"
 	"altcha/pkg/middleware"
 	"altcha/pkg/store"
 )
 
-func NewAPIServer(cfg *config.Config, s store.Store) *echo.Echo {
+func NewAPIServer(cfg *config.Config, s store.Store, collector *analytics.Collector) *echo.Echo {
 	e := echo.New()
 	e.HideBanner = true
 
@@ -33,6 +34,10 @@ func NewAPIServer(cfg *config.Config, s store.Store) *echo.Echo {
 		}))
 	} else {
 		e.Use(echomw.CORS())
+	}
+
+	if collector != nil {
+		e.Use(analytics.Middleware(collector))
 	}
 
 	e.GET("/", func(c echo.Context) error {
