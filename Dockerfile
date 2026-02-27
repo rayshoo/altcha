@@ -8,6 +8,7 @@ RUN CGO_ENABLED=0 go build -ldflags "-X altcha/pkg/handler.Version=${VERSION}" -
 RUN CGO_ENABLED=0 go build -ldflags "-X altcha/pkg/handler.Version=${VERSION}" -o /dashboard ./cmd/dashboard
 
 FROM alpine:3.21
+LABEL maintainer="rayshoo <fire@dragonz.dev>"
 RUN apk add --no-cache ca-certificates
 COPY --from=build /server /server
 COPY --from=build /dashboard /dashboard
