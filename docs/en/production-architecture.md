@@ -14,7 +14,7 @@ ALTCHA separates challenge issuance from verification. In production, it's impor
     |                             |                          |
     |--- POST /login ----------->|                           |  (2) Frontend → UI Backend
     |    (form + altcha payload)  |                           |
-    |                             |--- GET /verify --------->|  (3) Backend → ALTCHA (server-to-server)
+    |                             |--- POST /verify -------->|  (3) Backend → ALTCHA (server-to-server)
     |                             |<-- 202/417 --------------|
     |<-- login result ------------|                           |
 ```
@@ -32,7 +32,7 @@ When the user submits the form, the `altcha` payload is sent along with it. At t
 
 ### Step 3: Solution Verification (Backend → ALTCHA, server-to-server)
 
-The UI backend calls `GET /verify?altcha=<payload>` server-side.
+The UI backend calls `POST /verify` with `altcha=<payload>` server-side.
 
 **Why this should be a backend call, not a frontend call:**
 

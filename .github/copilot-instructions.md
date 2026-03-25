@@ -12,7 +12,7 @@
 - `cmd/dashboard/main.go`: Dashboard entrypoint; requires POSTGRES_URL and AUTH_PROVIDER.
 - `pkg/config/config.go`: Config struct and env-var parsing with defaults. Includes analytics, dashboard, and auth fields.
 - `pkg/handler/challenge.go`: `GET /challenge` handler.
-- `pkg/handler/verify.go`: `GET /verify` handler with in-memory record cache.
+- `pkg/handler/verify.go`: `POST /verify` handler with in-memory record cache.
 - `pkg/handler/demo.go`: Demo page serving and proxy handlers.
 - `pkg/middleware/security.go`: CSP header middleware for demo server.
 - `pkg/server/server.go`: Echo server creation and route registration. Accepts optional analytics collector.
@@ -66,14 +66,14 @@
 - `AUTH_ISSUER`, `AUTH_CLIENT_ID`, `AUTH_CLIENT_SECRET`: Keycloak OIDC settings.
 - `AUTH_PKCE`: enable PKCE (default true).
 - `AUTH_ALLOWED_USERS`, `AUTH_ALLOWED_GROUPS`, `AUTH_ALLOWED_ROLES`: access control (comma-separated, OR logic).
-- `.env` is loaded by `godotenv` at runtime; Dockerfile also copies `.env` into image.
+- `.env` is loaded by `godotenv` at runtime.
 
 ## API contracts (keep stable)
 
 - `GET /` → `204 No Content` (liveness).
 - `GET /health` → `200 OK` JSON with status, version, go runtime.
 - `GET /challenge` → `200 OK` JSON from `altcha.CreateChallenge()`.
-- `GET /verify?altcha=<payload>` → `202 Accepted` on success, `417 Expectation Failed` on invalid or reused token.
+- `POST /verify` (body: `altcha=<payload>`) → `202 Accepted` on success, `417 Expectation Failed` on invalid or reused token.
 - Reuse prevention uses an in-memory `recordCache` (size = `MAXRECORDS`); cache clears on restart/scaling.
 - CORS defaults to `*`; configurable via `CORS_ORIGIN`. Demo uses strict CSP.
 
@@ -93,8 +93,8 @@
 ## Common tasks (examples)
 
 - Test verify manually:
-  - PowerShell: `curl "http://localhost:3000/verify?altcha=$([uri]::EscapeDataString($payload))" -Method GET -UseBasicParsing`
-  - Unix: `curl -G --data-urlencode "altcha=$payload" http://localhost:3000/verify -i`
+  - PowerShell: `curl http://localhost:3000/verify -Method POST -Body @{altcha=$payload} -UseBasicParsing`
+  - Unix: `curl -X POST -d "altcha=$payload" http://localhost:3000/verify -i`
 - Enable demo: set `DEMO=true` and open `http://localhost:8000`.
 
 ## Gotchas

@@ -53,7 +53,7 @@ func NewAPIServer(cfg *config.Config, s store.Store, collector *analytics.Collec
 	e.GET("/health/live", handler.HealthLive())
 	e.GET("/health/ready", handler.HealthReady(s))
 	e.GET("/challenge", handler.Challenge(cfg))
-	e.GET("/verify", handler.Verify(cfg, s))
+	e.POST("/verify", handler.Verify(cfg, s))
 
 	return e
 }

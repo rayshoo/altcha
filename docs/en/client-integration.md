@@ -13,7 +13,7 @@ Add the ALTCHA widget to your form and point `challengeurl` to this service.
 </form>
 ```
 
-On form submission, the `altcha` field value is included in the request body. Call `GET /verify?altcha=...` from your server:
+On form submission, the `altcha` field value is included in the request body. Extract this value in your backend and send it to `POST /verify` for verification. The response code indicates the result:
 
 - `202 Accepted` → Verification successful
 - `417 Expectation Failed` → Invalid or reused token
@@ -24,14 +24,14 @@ PowerShell:
 
 ```powershell
 # Assuming $payload contains the altcha value from the client
-curl "http://localhost:3000/verify?altcha=$([uri]::EscapeDataString($payload))" -Method GET -UseBasicParsing
+curl http://localhost:3000/verify -Method POST -Body @{altcha=$payload} -UseBasicParsing
 ```
 
 Unix/macOS:
 
 ```bash
-curl -G \
-  --data-urlencode "altcha=$payload" \
+curl -X POST \
+  -d "altcha=$payload" \
   http://localhost:3000/verify -i
 ```
 

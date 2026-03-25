@@ -12,7 +12,7 @@ import (
 
 func Verify(cfg *config.Config, s store.Store) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		payload := c.QueryParam("altcha")
+		payload := c.FormValue("altcha")
 
 		exists, err := s.Exists(payload)
 		if err != nil {

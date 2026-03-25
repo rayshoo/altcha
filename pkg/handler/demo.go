@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 
 	"github.com/labstack/echo/v4"
 
@@ -38,9 +39,9 @@ func DemoChallenge(cfg *config.Config) echo.HandlerFunc {
 func DemoTest(cfg *config.Config) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		payload := c.FormValue("altcha")
-		url := fmt.Sprintf("http://localhost:%d/verify?altcha=%s", cfg.Port, payload)
+		verifyURL := fmt.Sprintf("http://localhost:%d/verify", cfg.Port)
 
-		resp, err := http.Get(url)
+		resp, err := http.PostForm(verifyURL, url.Values{"altcha": {payload}})
 		if err != nil {
 			return c.NoContent(http.StatusBadGateway)
 		}

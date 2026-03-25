@@ -14,7 +14,7 @@ ALTCHA는 챌린지 발급과 검증이 분리된 구조입니다. 운영 환경
     |                             |                          |
     |--- POST /login ----------->|                           |  (2) 프론트엔드 → UI 백엔드
     |    (form + altcha payload)  |                           |
-    |                             |--- GET /verify --------->|  (3) 백엔드 → ALTCHA (서버 to 서버)
+    |                             |--- POST /verify -------->|  (3) 백엔드 → ALTCHA (서버 to 서버)
     |                             |<-- 202/417 --------------|
     |<-- login result ------------|                           |
 ```
@@ -32,7 +32,7 @@ ALTCHA는 챌린지 발급과 검증이 분리된 구조입니다. 운영 환경
 
 ### 3단계: 솔루션 검증 (백엔드 → ALTCHA, 서버 to 서버)
 
-UI 백엔드가 `GET /verify?altcha=<payload>`를 서버사이드에서 호출합니다.
+UI 백엔드가 `POST /verify`에 `altcha=<payload>`를 담아 서버사이드에서 호출합니다.
 
 **프론트엔드가 아닌 백엔드에서 호출해야 하는 이유:**
 

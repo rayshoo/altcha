@@ -13,7 +13,7 @@
 </form>
 ```
 
-제출 시 요청 본문에 `altcha` 필드 값이 포함됩니다. 서버에서 `GET /verify?altcha=...`를 호출하고:
+폼 제출 시 요청 본문에 `altcha` 필드 값이 포함됩니다. 백엔드에서 이 값을 추출하여 `POST /verify`로 검증을 요청하세요. 응답 코드로 결과를 판단합니다:
 
 - `202 Accepted` → 검증 성공
 - `417 Expectation Failed` → 유효하지 않거나 재사용된 토큰
@@ -24,14 +24,14 @@ PowerShell:
 
 ```powershell
 # $payload에 클라이언트의 altcha 값이 포함되어 있다고 가정
-curl "http://localhost:3000/verify?altcha=$([uri]::EscapeDataString($payload))" -Method GET -UseBasicParsing
+curl http://localhost:3000/verify -Method POST -Body @{altcha=$payload} -UseBasicParsing
 ```
 
 Unix/macOS:
 
 ```bash
-curl -G \
-  --data-urlencode "altcha=$payload" \
+curl -X POST \
+  -d "altcha=$payload" \
   http://localhost:3000/verify -i
 ```
 
