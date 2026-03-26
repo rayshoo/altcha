@@ -24,6 +24,7 @@ func Challenge(cfg *config.Config) echo.HandlerFunc {
 			return c.NoContent(http.StatusInternalServerError)
 		}
 
+		c.Response().Header().Set("Connection", "close")
 		return c.JSON(http.StatusOK, challenge)
 	}
 }

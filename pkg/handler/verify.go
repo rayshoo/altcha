@@ -12,6 +12,7 @@ import (
 
 func Verify(cfg *config.Config, s store.Store) echo.HandlerFunc {
 	return func(c echo.Context) error {
+		c.Response().Header().Set("Connection", "close")
 		payload := c.FormValue("altcha")
 
 		exists, err := s.Exists(payload)
