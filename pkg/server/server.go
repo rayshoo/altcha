@@ -18,6 +18,16 @@ import (
 func NewAPIServer(cfg *config.Config, s store.Store, collector *analytics.Collector) *echo.Echo {
 	e := echo.New()
 	e.HideBanner = true
+	if cfg.TrustedProxy != "" {
+		e.IPExtractor = echo.ExtractIPFromXFFHeader()
+	}
+
+	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			c.Response().Header().Set("Connection", "close")
+			return next(c)
+		}
+	})
 
 	loggerConfig := echomw.LoggerConfig{
 		Format: "[API] ${time_rfc3339} ${remote_ip} ${method} ${uri} ${status} ${latency_human}\n",

@@ -18,11 +18,12 @@ type Config struct {
 	Demo          bool
 	LogLevel      string
 	RateLimit     float64
-	Store        string
-	SQLitePath   string
-	RedisURL     string
-	RedisCluster bool
-	DemoPort     int
+	Store         string
+	SQLitePath    string
+	RedisURL      string
+	RedisCluster  bool
+	DemoPort      int
+	TrustedProxy  string
 
 	// Analytics
 	PostgresURL string
@@ -73,6 +74,7 @@ func Load() *Config {
 		RedisURL:      envStr("REDIS_URL", "redis://localhost:6379"),
 		RedisCluster:  envBool("REDIS_CLUSTER", false),
 		DemoPort:      envInt("DEMO_PORT", 8000),
+		TrustedProxy:  envStr("TRUSTED_PROXY", ""),
 
 		// Analytics
 		PostgresURL: envStr("POSTGRES_URL", ""),
