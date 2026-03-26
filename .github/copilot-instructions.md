@@ -57,6 +57,7 @@
 - `REDIS_URL`: Redis connection URL (default `redis://localhost:6379`, used when STORE=redis).
 - `REDIS_CLUSTER`: set `true` for cluster mode (ElastiCache, Valkey); also auto-detected when REDIS_URL contains commas.
 - `LOG_LEVEL`: `info` (API logs only, default) or `debug` (API + demo logs).
+- `TRUSTED_PROXY`: when set, extract client IP from `X-Forwarded-For` header (for use behind LB).
 - `DEMO`: when `true`, serve demo on 8000 with CSP middleware.
 - `POSTGRES_URL`: PostgreSQL connection URL. Enables analytics when set.
 - `GEOIP_DB`: path to GeoLite2-Country.mmdb for location statistics.

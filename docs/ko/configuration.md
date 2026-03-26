@@ -17,6 +17,7 @@
 | REDIS_URL | | `redis://localhost:6379` | Redis 연결 URL (STORE=redis 시) |
 | REDIS_CLUSTER | | `false` | `true` 시 클러스터 모드 사용 (ElastiCache, Valkey 등) |
 | LOG_LEVEL | | `info` | `info`: API 로그만, `debug`: API + 데모 로그 |
+| TRUSTED_PROXY | | | 값 설정 시 `X-Forwarded-For` 헤더에서 클라이언트 IP 추출. LB(NLB, ALB 등) 뒤에서 사용 |
 | DEMO | | `false` | `true` 시 포트 8000에서 데모 UI 시작 |
 | POSTGRES_URL | | | PostgreSQL 연결 URL. 설정 시 분석(analytics) 활성화 |
 | GEOIP_DB | | | GeoLite2-Country.mmdb 경로 (선택, 국가별 통계 활성화) |

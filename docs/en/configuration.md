@@ -17,6 +17,7 @@
 | REDIS_URL | | `redis://localhost:6379` | Redis connection URL (when STORE=redis) |
 | REDIS_CLUSTER | | `false` | Use cluster mode when `true` (ElastiCache, Valkey, etc.) |
 | LOG_LEVEL | | `info` | `info`: API logs only, `debug`: API + demo logs |
+| TRUSTED_PROXY | | | Extract client IP from `X-Forwarded-For` header when set. Use behind a load balancer (NLB, ALB, etc.) |
 | DEMO | | `false` | Start demo UI on port 8000 when `true` |
 | POSTGRES_URL | | | PostgreSQL connection URL. Enables analytics when set |
 | GEOIP_DB | | | Path to GeoLite2-Country.mmdb (optional, enables location stats) |
